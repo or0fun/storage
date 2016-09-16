@@ -1,6 +1,7 @@
 package com.baiwanlu.android.storage;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.LruCache;
 
 import com.baiwanlu.android.storage.util.SharedPreferencesManager;
@@ -192,6 +193,24 @@ public class FStorageManager {
 
     /////Get
 
+    /**
+     * 获取
+     * @param module
+     * @param key
+     * @param defaultValue
+     */
+    public static <T> T get(String module, String key, T defaultValue) {
+        if (TextUtils.isEmpty(module)) {
+            return defaultValue;
+        }if (TextUtils.isEmpty(key)) {
+            return defaultValue;
+        }
+        Object v = getFromCache(module, key);
+        if (null == v) {
+            return defaultValue;
+        }
+        return (T) v;
+    }
 
     /**
      * 获取
@@ -200,7 +219,19 @@ public class FStorageManager {
      * @param defaultValue
      */
     public static String get(String module, String key, String defaultValue) {
-        return SharedPreferencesManager.getInstance(module).getString(key, defaultValue);
+        if (TextUtils.isEmpty(module)) {
+            return defaultValue;
+        }if (TextUtils.isEmpty(key)) {
+            return defaultValue;
+        }
+        Object v = getFromCache(module, key);
+        if (null == v) {
+            return SharedPreferencesManager.getInstance(module).getString(key, defaultValue);
+        }
+        if (v instanceof String) {
+            return (String) v;
+        }
+        return defaultValue;
     }
 
     /**
@@ -210,35 +241,95 @@ public class FStorageManager {
      * @param defaultValue
      */
     public static int get(String module, String key, int defaultValue) {
-        return SharedPreferencesManager.getInstance(module).getInt(key, defaultValue);
+        if (TextUtils.isEmpty(module)) {
+            return defaultValue;
+        }if (TextUtils.isEmpty(key)) {
+            return defaultValue;
+        }
+        Object v = getFromCache(module, key);
+        if (null == v) {
+            return SharedPreferencesManager.getInstance(module).getInt(key, defaultValue);
+        }
+        if (v instanceof Integer) {
+            return (int) v;
+        }
+        return defaultValue;
     }
     /**
      * 存储
      * @param module
      * @param key
-     * @param value
+     * @param defaultValue
      */
-    public static long get(String module, String key, long value) {
-        return SharedPreferencesManager.getInstance(module).getLong(key, value);
+    public static long get(String module, String key, long defaultValue) {
+        if (TextUtils.isEmpty(module)) {
+            return defaultValue;
+        }if (TextUtils.isEmpty(key)) {
+            return defaultValue;
+        }
+        Object v = getFromCache(module, key);
+        if (null == v) {
+            return SharedPreferencesManager.getInstance(module).getLong(key, defaultValue);
+        }
+        if (v instanceof Long) {
+            return (long) v;
+        }
+        return defaultValue;
     }
     /**
      * 获取
      * @param module
      * @param key
-     * @param value
+     * @param defaultValue
      */
-    public static boolean get(String module, String key, boolean value) {
-        return SharedPreferencesManager.getInstance(module).getBoolean(key, value);
+    public static boolean get(String module, String key, boolean defaultValue) {
+        if (TextUtils.isEmpty(module)) {
+            return defaultValue;
+        }if (TextUtils.isEmpty(key)) {
+            return defaultValue;
+        }
+        Object v = getFromCache(module, key);
+        if (null == v) {
+            return SharedPreferencesManager.getInstance(module).getBoolean(key, defaultValue);
+        }
+        if (v instanceof Boolean) {
+            return (boolean) v;
+        }
+        return defaultValue;
     }
 
     /**
      * 获取
      * @param module
      * @param key
-     * @param value
+     * @param defaultValue
      */
-    public static float get(String module, String key, float value) {
-        return SharedPreferencesManager.getInstance(module).getFloat(key, value);
+    public static float get(String module, String key, float defaultValue) {
+        if (TextUtils.isEmpty(module)) {
+            return defaultValue;
+        }if (TextUtils.isEmpty(key)) {
+            return defaultValue;
+        }
+        Object v = getFromCache(module, key);
+        if (null == v) {
+            return SharedPreferencesManager.getInstance(module).getFloat(key, defaultValue);
+        }
+        if (v instanceof Float) {
+            return (float) v;
+        }
+        return defaultValue;
     }
 
+    private static Object getFromCache(String module, String key) {
+        if (null == lruCacheMap) {
+            return null;
+        }
+        if (!lruCacheMap.containsKey(module)) {
+            return null;
+        }
+        if (null == lruCacheMap.get(module)) {
+            return null;
+        }
+        return lruCacheMap.get(module).get(key);
+    }
 }
