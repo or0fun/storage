@@ -149,6 +149,7 @@ public class FStorageManager {
      * @param value
      */
     public static void putToDisk(String module, String key, String value) {
+        putToCache(module, key, value);
         SharedPreferencesManager.getInstance(module).put(key, value);
     }
 
@@ -159,6 +160,7 @@ public class FStorageManager {
      * @param value
      */
     public static void putToDisk(String module, String key, int value) {
+        putToCache(module, key, value);
         SharedPreferencesManager.getInstance(module).put(key, value);
     }
     /**
@@ -168,6 +170,7 @@ public class FStorageManager {
      * @param value
      */
     public static void putToDisk(String module, String key, long value) {
+        putToCache(module, key, value);
         SharedPreferencesManager.getInstance(module).put(key, value);
     }
     /**
@@ -177,6 +180,7 @@ public class FStorageManager {
      * @param value
      */
     public static void putToDisk(String module, String key, boolean value) {
+        putToCache(module, key, value);
         SharedPreferencesManager.getInstance(module).put(key, value);
     }
 
@@ -187,6 +191,7 @@ public class FStorageManager {
      * @param value
      */
     public static void putToDisk(String module, String key, float value) {
+        putToCache(module, key, value);
         SharedPreferencesManager.getInstance(module).put(key, value);
     }
 
@@ -226,7 +231,12 @@ public class FStorageManager {
         }
         Object v = getFromCache(module, key);
         if (null == v) {
-            return SharedPreferencesManager.getInstance(module).getString(key, defaultValue);
+            if (null == defaultValue) {
+                defaultValue = "";
+            }
+            String s = SharedPreferencesManager.getInstance(module).getString(key, defaultValue);
+            putToCache(module, key, s);
+            return s;
         }
         if (v instanceof String) {
             return (String) v;
@@ -248,7 +258,9 @@ public class FStorageManager {
         }
         Object v = getFromCache(module, key);
         if (null == v) {
-            return SharedPreferencesManager.getInstance(module).getInt(key, defaultValue);
+            int i = SharedPreferencesManager.getInstance(module).getInt(key, defaultValue);
+            putToCache(module, key, i);
+            return i;
         }
         if (v instanceof Integer) {
             return (int) v;
@@ -269,7 +281,9 @@ public class FStorageManager {
         }
         Object v = getFromCache(module, key);
         if (null == v) {
-            return SharedPreferencesManager.getInstance(module).getLong(key, defaultValue);
+            long l = SharedPreferencesManager.getInstance(module).getLong(key, defaultValue);
+            putToCache(module, key, l);
+            return l;
         }
         if (v instanceof Long) {
             return (long) v;
@@ -290,7 +304,9 @@ public class FStorageManager {
         }
         Object v = getFromCache(module, key);
         if (null == v) {
-            return SharedPreferencesManager.getInstance(module).getBoolean(key, defaultValue);
+            boolean b = SharedPreferencesManager.getInstance(module).getBoolean(key, defaultValue);
+            putToCache(module, key, b);
+            return b;
         }
         if (v instanceof Boolean) {
             return (boolean) v;
@@ -312,7 +328,9 @@ public class FStorageManager {
         }
         Object v = getFromCache(module, key);
         if (null == v) {
-            return SharedPreferencesManager.getInstance(module).getFloat(key, defaultValue);
+            Float f = SharedPreferencesManager.getInstance(module).getFloat(key, defaultValue);
+            putToCache(module, key, f);
+            return f;
         }
         if (v instanceof Float) {
             return (float) v;
